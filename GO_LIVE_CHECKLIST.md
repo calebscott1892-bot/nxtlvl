@@ -235,4 +235,4 @@ Before going public:
 - Vercel environment variables: `https://vercel.com/docs/environment-variables`
 - Supabase connection strings: `https://supabase.com/docs/reference/postgres/connection-strings`
 - Supabase SQL editor: `https://supabase.com/docs/guides/database/overview`
-
+- Vercel deployment protection: `https://vercel.com/docs/deployment-protection`
