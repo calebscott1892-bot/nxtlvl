@@ -34,15 +34,17 @@ except ModuleNotFoundError:
 router = APIRouter(prefix="/bookings", tags=["bookings"])
 public_router = router
 
-DB_PATH = Path(__file__).parent / "bookings.db"
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 USE_POSTGRES = DATABASE_URL.lower().startswith(("postgres://", "postgresql://"))
+DEFAULT_SQLITE_PATH = "/tmp/bookings.db" if os.environ.get("VERCEL") else Path(__file__).parent / "bookings.db"
+DB_PATH = Path(os.environ.get("SQLITE_DB_PATH", DEFAULT_SQLITE_PATH))
 
 VALID_TIMES = {"08:00", "09:00", "10:00", "11:00", "12:00", "13:00"}
 WEEKDAYS = {0, 1, 2, 3, 4}
 BUSINESS_TZ = ZoneInfo("America/Chicago")
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 PHONE_RE = re.compile(r"^[-0-9+() ]{7,20}$")
+_DB_READY = False
 
 
 def _today():
@@ -85,6 +87,10 @@ def _sql(sqlite_sql: str, postgres_sql: str | None = None) -> str:
 
 
 def _init_db():
+    global _DB_READY
+    if _DB_READY:
+        return
+
     with _get_db() as db:
         if USE_POSTGRES:
             db.execute("""
@@ -124,9 +130,12 @@ def _init_db():
             ON bookings (preferred_date, preferred_time)
             WHERE status != 'cancelled'
         """)
+    _DB_READY = True
 
 
-_init_db()
+def _ensure_db():
+    if not _DB_READY:
+        _init_db()
 
 
 class BookingCreate(BaseModel):
@@ -210,6 +219,7 @@ class StatusUpdate(BaseModel):
 @router.post("", status_code=201)
 def create_booking(body: BookingCreate, background_tasks: BackgroundTasks):
     """Submit a new booking request."""
+    _ensure_db()
     with _get_db() as db:
         existing = db.execute(
             _sql("SELECT id FROM bookings WHERE preferred_date = ? AND preferred_time = ? AND status != 'cancelled'"),
@@ -272,6 +282,7 @@ def create_booking(body: BookingCreate, background_tasks: BackgroundTasks):
 @router.get("/availability")
 def get_availability(month: str):
     """Return available slots for every weekday in the given month."""
+    _ensure_db()
     try:
         year, mon = month.split("-")
         year, mon = int(year), int(mon)
@@ -310,6 +321,7 @@ def get_availability(month: str):
 @router.get("/availability/{date}")
 def get_day_availability(date: str):
     """Return available slots for a single date."""
+    _ensure_db()
     try:
         d = datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
@@ -332,6 +344,7 @@ def get_day_availability(date: str):
 
 def list_bookings():
     """Return all bookings, newest first for admin."""
+    _ensure_db()
     with _get_db() as db:
         rows = db.execute(
             "SELECT * FROM bookings ORDER BY preferred_date DESC, preferred_time DESC"
@@ -341,6 +354,7 @@ def list_bookings():
 
 def update_status(booking_id: int, body: StatusUpdate):
     """Confirm or cancel a booking."""
+    _ensure_db()
     with _get_db() as db:
         existing = db.execute(
             _sql("SELECT id FROM bookings WHERE id = ?"),

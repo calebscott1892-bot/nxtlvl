@@ -114,7 +114,10 @@ async def log_requests(request: Request, call_next):
 # ── Health check ───────────────────────────────────────
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "database": "postgres" if os.environ.get("DATABASE_URL", "").strip() else "sqlite-fallback",
+    }
 
 
 # ── Public booking routes (create + availability) ─────
