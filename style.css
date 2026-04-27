@@ -829,6 +829,38 @@ section {
     font-size: 0.85rem;
 }
 
+#booking-calendar .fc-event {
+    border-radius: 2px;
+    border-width: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 1px 3px;
+    padding: 2px 4px;
+}
+
+#booking-calendar .calendar-availability--open {
+    background: #16a34a !important;
+}
+
+#booking-calendar .calendar-availability--limited {
+    background: #d97706 !important;
+}
+
+#booking-calendar .calendar-availability--full {
+    background: #7f1d1d !important;
+}
+
+#booking-calendar .calendar-booked-count {
+    background: #374151 !important;
+    color: #f3f4f6 !important;
+    opacity: 0.92;
+}
+
+#booking-calendar .fc-daygrid-event {
+    white-space: normal;
+}
+
 .booking-form {
     display: flex;
     flex-direction: column;

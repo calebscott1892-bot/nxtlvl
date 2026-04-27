@@ -120,12 +120,44 @@ document.addEventListener('DOMContentLoaded', () => {
             calendar.removeAllEvents();
 
             data.forEach(day => {
-                if (day.slots.length > 0) {
+                const availableCount = day.slots.length;
+                const totalSlots = day.total_slots || 6;
+                const bookedCount = typeof day.booked_count === 'number'
+                    ? day.booked_count
+                    : Math.max(0, totalSlots - availableCount);
+
+                if (availableCount > 0) {
                     calendar.addEvent({
-                        title: `${day.slots.length} slot${day.slots.length > 1 ? 's' : ''}`,
+                        title: `${availableCount} open`,
                         start: day.date,
-                        backgroundColor: day.slots.length <= 2 ? '#d97706' : '#22c55e',
-                        borderColor: day.slots.length <= 2 ? '#d97706' : '#22c55e',
+                        classNames: [
+                            'calendar-availability',
+                            availableCount <= 2 ? 'calendar-availability--limited' : 'calendar-availability--open'
+                        ],
+                        backgroundColor: availableCount <= 2 ? '#d97706' : '#22c55e',
+                        borderColor: availableCount <= 2 ? '#d97706' : '#22c55e',
+                        textColor: '#ffffff',
+                        allDay: true
+                    });
+                } else {
+                    calendar.addEvent({
+                        title: 'Fully booked',
+                        start: day.date,
+                        classNames: ['calendar-availability', 'calendar-availability--full'],
+                        backgroundColor: '#7f1d1d',
+                        borderColor: '#7f1d1d',
+                        textColor: '#ffffff',
+                        allDay: true
+                    });
+                }
+
+                if (bookedCount > 0) {
+                    calendar.addEvent({
+                        title: `${bookedCount} booked`,
+                        start: day.date,
+                        classNames: ['calendar-booked-count'],
+                        backgroundColor: '#4b5563',
+                        borderColor: '#4b5563',
                         textColor: '#ffffff',
                         allDay: true
                     });

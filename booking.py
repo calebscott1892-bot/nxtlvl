@@ -40,6 +40,7 @@ DEFAULT_SQLITE_PATH = "/tmp/bookings.db" if os.environ.get("VERCEL") else Path(_
 DB_PATH = Path(os.environ.get("SQLITE_DB_PATH", DEFAULT_SQLITE_PATH))
 
 VALID_TIMES = {"08:00", "09:00", "10:00", "11:00", "12:00", "13:00"}
+TOTAL_DAILY_SLOTS = len(VALID_TIMES)
 WEEKDAYS = {0, 1, 2, 3, 4}
 BUSINESS_TZ = ZoneInfo("America/Chicago")
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
@@ -313,7 +314,13 @@ def get_availability(month: str):
             continue
         date_str = d.strftime("%Y-%m-%d")
         taken = booked.get(date_str, set())
-        result.append({"date": date_str, "slots": sorted(VALID_TIMES - taken)})
+        available = sorted(VALID_TIMES - taken)
+        result.append({
+            "date": date_str,
+            "slots": available,
+            "booked_count": TOTAL_DAILY_SLOTS - len(available),
+            "total_slots": TOTAL_DAILY_SLOTS,
+        })
 
     return result
 
