@@ -279,7 +279,7 @@ img {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: url('/public/Header.jpeg') center 22% / cover no-repeat;
+    background: url('/Header.jpeg') center 22% / cover no-repeat;
     opacity: 0.25;
 }
 
