@@ -143,6 +143,106 @@
             margin-top: 0.25rem;
         }
 
+        .admin-tools {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
+            background: var(--charcoal);
+            border: 1px solid var(--wood-accent);
+            padding: 1.25rem;
+        }
+
+        .tool-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card h2 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.35rem;
+        }
+
+        .tool-card p {
+            color: var(--grey-light);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .tool-btn {
+            padding: 0.55rem 0.9rem;
+            background: transparent;
+            border: 1px solid var(--wood-accent);
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tool-btn:hover:not(:disabled) {
+            background: var(--wood-accent);
+        }
+
+        .tool-btn:disabled {
+            cursor: wait;
+            opacity: 0.55;
+        }
+
+        .tool-status {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .tool-status-item {
+            border: 1px solid var(--grey-mid);
+            padding: 0.8rem;
+            min-height: 82px;
+        }
+
+        .tool-status-label {
+            color: var(--grey-light);
+            font-family: var(--font-heading);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.45rem;
+        }
+
+        .tool-status-value {
+            color: var(--white);
+            font-size: 0.82rem;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .status-ok { color: #22c55e; }
+        .status-warn { color: #d97706; }
+
         /* Filters */
         .filters {
             display: flex;
@@ -248,6 +348,9 @@
         @media (max-width: 768px) {
             body { padding: 1rem; }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .tool-card-header { display: block; }
+            .tool-actions { justify-content: flex-start; margin-top: 1rem; }
+            .tool-status { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -289,6 +392,35 @@
             </div>
         </div>
 
+        <div class="admin-tools">
+            <section class="tool-card">
+                <div class="tool-card-header">
+                    <div>
+                        <h2>Notifications</h2>
+                        <p id="notification-summary">Checking email and SMS setup...</p>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-btn" id="check-notifications-btn">Check Setup</button>
+                        <button class="tool-btn" id="test-notifications-btn">Send Test</button>
+                    </div>
+                </div>
+                <div class="tool-status" id="notification-status">
+                    <div class="tool-status-item">
+                        <div class="tool-status-label">Coach Email</div>
+                        <div class="tool-status-value">Not checked yet</div>
+                    </div>
+                    <div class="tool-status-item">
+                        <div class="tool-status-label">Customer Email</div>
+                        <div class="tool-status-value">Not checked yet</div>
+                    </div>
+                    <div class="tool-status-item">
+                        <div class="tool-status-label">SMS</div>
+                        <div class="tool-status-value">Not checked yet</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
         <div class="filters">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="pending">Pending</button>
@@ -328,6 +460,10 @@
         const keyInput = document.getElementById('admin-key-input');
         const authBtn = document.getElementById('auth-btn');
         const authError = document.getElementById('auth-error');
+        const notificationSummary = document.getElementById('notification-summary');
+        const notificationStatus = document.getElementById('notification-status');
+        const checkNotificationsBtn = document.getElementById('check-notifications-btn');
+        const testNotificationsBtn = document.getElementById('test-notifications-btn');
 
         // Auth
         async function authenticate() {
@@ -351,6 +487,7 @@
                 authGate.style.display = 'none';
                 dashboard.style.display = 'block';
                 renderDashboard();
+                checkNotificationStatus();
             } catch (e) {
                 authError.textContent = 'Connection error. Is the server running?';
             }
@@ -423,6 +560,103 @@
             return div.innerHTML;
         }
 
+        function renderNotificationStatus(items, summary) {
+            notificationSummary.textContent = summary;
+            notificationStatus.innerHTML = items.map(item => `
+                <div class="tool-status-item">
+                    <div class="tool-status-label">${esc(item.label)}</div>
+                    <div class="tool-status-value ${item.ok ? 'status-ok' : 'status-warn'}">${esc(item.value)}</div>
+                </div>
+            `).join('');
+        }
+
+        function setNotificationButtons(disabled) {
+            checkNotificationsBtn.disabled = disabled;
+            testNotificationsBtn.disabled = disabled;
+        }
+
+        async function checkNotificationStatus() {
+            setNotificationButtons(true);
+            try {
+                const resp = await fetch('/admin/notifications/status', {
+                    headers: { 'X-Admin-Key': adminKey }
+                });
+
+                if (!resp.ok) throw new Error('Status check failed');
+
+                const data = await resp.json();
+                const emailReady = Boolean(data.email_configured);
+                const smsReady = Boolean(data.sms_configured);
+                const readyCount = [emailReady, smsReady].filter(Boolean).length;
+
+                renderNotificationStatus([
+                    {
+                        label: 'Coach Email',
+                        ok: emailReady,
+                        value: emailReady ? `Ready: ${data.notify_email}` : 'Missing SMTP and/or coach email env vars'
+                    },
+                    {
+                        label: 'Customer Email',
+                        ok: emailReady,
+                        value: emailReady ? `Ready from ${data.smtp_from_name}` : 'Uses the same SMTP setup as coach email'
+                    },
+                    {
+                        label: 'SMS',
+                        ok: smsReady,
+                        value: smsReady ? `Ready: ${data.notify_phone}` : 'Optional: add Twilio env vars to enable text alerts'
+                    }
+                ], `${readyCount}/2 notification channels configured. Site URL: ${data.site_url}`);
+            } catch {
+                renderNotificationStatus([
+                    { label: 'Coach Email', ok: false, value: 'Could not check setup' },
+                    { label: 'Customer Email', ok: false, value: 'Could not check setup' },
+                    { label: 'SMS', ok: false, value: 'Could not check setup' }
+                ], 'Notification check failed. Confirm the admin key and redeploy status.');
+            } finally {
+                setNotificationButtons(false);
+            }
+        }
+
+        async function sendTestNotifications() {
+            setNotificationButtons(true);
+            notificationSummary.textContent = 'Sending test notification...';
+            try {
+                const resp = await fetch('/admin/notifications/test', {
+                    method: 'POST',
+                    headers: { 'X-Admin-Key': adminKey }
+                });
+
+                if (!resp.ok) throw new Error('Test failed');
+
+                const data = await resp.json();
+                renderNotificationStatus([
+                    {
+                        label: 'Coach Email',
+                        ok: Boolean(data.coach_email?.sent),
+                        value: data.coach_email?.message || 'No result returned'
+                    },
+                    {
+                        label: 'Customer Email',
+                        ok: Boolean(data.customer_email?.sent),
+                        value: data.customer_email?.message || 'No result returned'
+                    },
+                    {
+                        label: 'SMS',
+                        ok: Boolean(data.sms?.sent),
+                        value: data.sms?.message || 'No result returned'
+                    }
+                ], 'Test complete. Check the messages below, then check the actual inbox/phone if a channel says it was sent.');
+            } catch {
+                renderNotificationStatus([
+                    { label: 'Coach Email', ok: false, value: 'Test request failed' },
+                    { label: 'Customer Email', ok: false, value: 'Test request failed' },
+                    { label: 'SMS', ok: false, value: 'Test request failed' }
+                ], 'Notification test failed. Try Check Setup first.');
+            } finally {
+                setNotificationButtons(false);
+            }
+        }
+
         // Status update
         async function updateStatus(id, status) {
             try {
@@ -459,6 +693,9 @@
                 renderTable();
             });
         });
+
+        checkNotificationsBtn.addEventListener('click', checkNotificationStatus);
+        testNotificationsBtn.addEventListener('click', sendTestNotifications);
     </script>
 </body>
 </html>
