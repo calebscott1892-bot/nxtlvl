@@ -113,6 +113,7 @@ Required:
 ```text
 DATABASE_URL=your-full-supabase-connection-string
 NXTLVL_ADMIN_KEY=your-private-admin-key
+SITE_URL=https://nxtlvl-theta.vercel.app
 ```
 
 Recommended for email alerts:
@@ -120,6 +121,7 @@ Recommended for email alerts:
 ```text
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
+SMTP_FROM_NAME=NXTLVL Training
 SMTP_USER=your-sending-gmail-address
 SMTP_PASS=your-google-app-password
 NOTIFY_EMAIL=where-you-want-booking-alerts
@@ -196,10 +198,24 @@ Why: this confirms bookings are stored in the real production database.
 
 ## Step 12: Test Notifications
 
-1. Submit a test booking.
-2. Check `NOTIFY_EMAIL` inbox.
-3. If no email arrives, check Vercel logs.
-4. If using Twilio, check your phone for SMS.
+1. Add the email variables in Vercel.
+2. Redeploy the latest Vercel deployment so the variables are available.
+3. Check notification config:
+
+```bash
+curl -H "X-Admin-Key: YOUR_ADMIN_KEY" https://nxtlvl-theta.vercel.app/admin/notifications/status
+```
+
+4. Send a test notification:
+
+```bash
+curl -X POST -H "X-Admin-Key: YOUR_ADMIN_KEY" https://nxtlvl-theta.vercel.app/admin/notifications/test
+```
+
+5. Check `NOTIFY_EMAIL` inbox.
+6. If no email arrives, check Vercel logs.
+7. If using Twilio, check your phone for SMS.
+8. Submit a real test booking and confirm the customer confirmation email arrives.
 
 ## Step 13: Test Payments
 

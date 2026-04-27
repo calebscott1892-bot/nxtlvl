@@ -18,6 +18,7 @@ try:
         public_router,
         update_status,
     )
+    from nxtlvl.notifications import notification_config_status, send_test_notifications
 except ModuleNotFoundError:
     from booking import (
         StatusUpdate,
@@ -25,6 +26,7 @@ except ModuleNotFoundError:
         public_router,
         update_status,
     )
+    from notifications import notification_config_status, send_test_notifications
 
 # ── Logging ────────────────────────────────────────────
 logging.basicConfig(
@@ -136,4 +138,14 @@ def admin_update_status(booking_id: int, body: StatusUpdate):
 
 
 # ── Static files (must be last) ───────────────────────
+@app.get("/admin/notifications/status", dependencies=[Depends(require_admin_key)], tags=["admin"])
+def admin_notification_status():
+    return notification_config_status()
+
+
+@app.post("/admin/notifications/test", dependencies=[Depends(require_admin_key)], tags=["admin"])
+def admin_test_notifications():
+    return send_test_notifications()
+
+
 app.mount("/", StaticFiles(directory=str(Path(__file__).parent), html=True), name="static")
