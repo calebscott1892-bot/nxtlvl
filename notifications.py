@@ -20,7 +20,7 @@ SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASS = os.environ.get("SMTP_PASS", "")
 SMTP_FROM_NAME = os.environ.get("SMTP_FROM_NAME", "NXTLVL Training")
-NOTIFY_EMAIL = os.environ.get("NOTIFY_EMAIL", "")
+NOTIFY_EMAIL = os.environ.get("NOTIFY_EMAIL") or "raquanbryant18@gmail.com"
 
 TWILIO_SID = os.environ.get("TWILIO_SID", "")
 TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
@@ -40,6 +40,9 @@ def notification_config_status() -> dict:
         "email_configured": bool(SMTP_USER and SMTP_PASS and NOTIFY_EMAIL),
         "sms_configured": bool(TWILIO_SID and TWILIO_TOKEN and TWILIO_FROM and NOTIFY_PHONE),
         "site_url": SITE_URL,
+        "smtp_from_name": SMTP_FROM_NAME,
+        "notify_email": NOTIFY_EMAIL,
+        "notify_phone": NOTIFY_PHONE,
         "notify_email_set": bool(NOTIFY_EMAIL),
         "notify_phone_set": bool(NOTIFY_PHONE),
     }

@@ -122,10 +122,17 @@ Recommended for email alerts:
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_FROM_NAME=NXTLVL Training
-SMTP_USER=your-sending-gmail-address
-SMTP_PASS=your-google-app-password
-NOTIFY_EMAIL=where-you-want-booking-alerts
+SMTP_USER=your-sending-email-address
+SMTP_PASS=your-sending-email-app-password
+NOTIFY_EMAIL=raquanbryant18@gmail.com
 ```
+
+Important: `NOTIFY_EMAIL` is where booking alerts go. `SMTP_USER` is the inbox that sends the emails.
+They do not have to be the same email address.
+
+If you do not have access to `raquanbryant18@gmail.com`, do not use it as `SMTP_USER`.
+Use an email account you can log into, or use a sending service such as Resend.
+The site will still send every booking alert to `raquanbryant18@gmail.com` through `NOTIFY_EMAIL`.
 
 Optional SMS alerts:
 
@@ -152,12 +159,17 @@ Save it in a password manager or private note. If you lose it, you can replace i
 
 Why: Gmail will not let apps send email using your normal password. You need an app password.
 
+Only do this for an email inbox you can access.
+
 1. Go to `https://myaccount.google.com/security`.
-2. Make sure `2-Step Verification` is on.
-3. Search the page for `App passwords`.
-4. Create an app password for Mail.
-5. Copy the generated app password.
-6. Put it in Vercel as `SMTP_PASS`.
+2. Log into the email account you want to send from.
+3. Make sure `2-Step Verification` is on.
+4. Search the page for `App passwords`.
+5. Create an app password for Mail.
+6. Copy the generated app password.
+7. Put that email address in Vercel as `SMTP_USER`.
+8. Put the app password in Vercel as `SMTP_PASS`.
+9. Keep `NOTIFY_EMAIL=raquanbryant18@gmail.com`.
 
 ## Step 9: Deploy
 
