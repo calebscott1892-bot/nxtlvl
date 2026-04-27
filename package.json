@@ -1,0 +1,7 @@
+{
+  "name": "nxtlvl",
+  "private": true,
+  "scripts": {
+    "dev": "cd .. && .\\nxtlvl\\.venv\\Scripts\\python.exe -m uvicorn nxtlvl.server:app --reload"
+  }
+}

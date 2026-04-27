@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXTLVL Admin — Booking Management</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --charcoal: #141414;
+            --grey-dark: #1e1e1e;
+            --grey-mid: #3a3a3a;
+            --grey-light: #8a8a8a;
+            --white: #f5f5f5;
+            --wood-dark: #1a1510;
+            --wood-mid: #2a2218;
+            --wood-accent: #5c4a35;
+            --wood-highlight: #8b7355;
+            --font-heading: 'Barlow Condensed', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-body);
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--wood-accent);
+        }
+
+        .admin-header h1 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .admin-header a {
+            color: var(--wood-highlight);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        /* Auth gate */
+        #auth-gate {
+            max-width: 400px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+
+        #auth-gate h2 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        #auth-gate input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: var(--wood-dark);
+            border: 1px solid var(--wood-accent);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        #auth-gate input:focus {
+            outline: none;
+            border-color: var(--wood-highlight);
+        }
+
+        #auth-gate button {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--wood-accent);
+            border: 1px solid var(--wood-accent);
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #auth-gate button:hover {
+            background: var(--wood-highlight);
+        }
+
+        #auth-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Dashboard */
+        #dashboard { display: none; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(160deg, var(--wood-mid), var(--charcoal));
+            border: 1px solid var(--wood-accent);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-num {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--white);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--grey-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--wood-accent);
+            color: var(--grey-light);
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--wood-accent);
+            color: var(--white);
+            border-color: var(--wood-accent);
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--grey-light);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--wood-accent);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--grey-mid);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: rgba(139, 115, 85, 0.06);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 2px;
+        }
+
+        .badge-pending   { background: rgba(217, 119, 6, 0.2); color: #d97706; border: 1px solid #d97706; }
+        .badge-confirmed { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+        .badge-cancelled { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+
+        .action-btn {
+            padding: 0.3rem 0.75rem;
+            border: 1px solid var(--grey-mid);
+            background: transparent;
+            color: var(--grey-light);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 0.25rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--wood-highlight);
+            color: var(--white);
+        }
+
+        .action-btn.confirm:hover { border-color: #22c55e; color: #22c55e; }
+        .action-btn.cancel:hover  { border-color: #ef4444; color: #ef4444; }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--grey-light);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1>NXTLVL Admin</h1>
+        <a href="/">&larr; Back to Site</a>
+    </div>
+
+    <!-- Auth Gate -->
+    <div id="auth-gate">
+        <h2>Admin Login</h2>
+        <p style="color: var(--grey-light); margin-bottom: 1.5rem; font-size: 0.9rem;">
+            Enter the admin key to manage bookings.
+        </p>
+        <input type="password" id="admin-key-input" placeholder="Admin Key" autocomplete="off">
+        <button id="auth-btn">Authenticate</button>
+        <p id="auth-error"></p>
+    </div>
+
+    <!-- Dashboard (hidden until auth) -->
+    <div id="dashboard">
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-num" id="stat-total">0</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="stat-pending">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="stat-confirmed">0</div>
+                <div class="stat-label">Confirmed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="stat-cancelled">0</div>
+                <div class="stat-label">Cancelled</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="confirmed">Confirmed</button>
+            <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookings-tbody"></tbody>
+            </table>
+            <div class="empty-state" id="empty-state" style="display:none;">No bookings found.</div>
+        </div>
+    </div>
+
+    <script>
+        let adminKey = '';
+        let allBookings = [];
+        let currentFilter = 'all';
+
+        const authGate = document.getElementById('auth-gate');
+        const dashboard = document.getElementById('dashboard');
+        const keyInput = document.getElementById('admin-key-input');
+        const authBtn = document.getElementById('auth-btn');
+        const authError = document.getElementById('auth-error');
+
+        // Auth
+        async function authenticate() {
+            const key = keyInput.value.trim();
+            if (!key) { authError.textContent = 'Please enter a key.'; return; }
+
+            try {
+                const resp = await fetch('/bookings', {
+                    headers: { 'X-Admin-Key': key }
+                });
+
+                if (resp.status === 403) {
+                    authError.textContent = 'Invalid admin key.';
+                    return;
+                }
+
+                if (!resp.ok) throw new Error('Server error');
+
+                adminKey = key;
+                allBookings = await resp.json();
+                authGate.style.display = 'none';
+                dashboard.style.display = 'block';
+                renderDashboard();
+            } catch (e) {
+                authError.textContent = 'Connection error. Is the server running?';
+            }
+        }
+
+        authBtn.addEventListener('click', authenticate);
+        keyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') authenticate(); });
+
+        // Render
+        function renderDashboard() {
+            const pending = allBookings.filter(b => b.status === 'pending').length;
+            const confirmed = allBookings.filter(b => b.status === 'confirmed').length;
+            const cancelled = allBookings.filter(b => b.status === 'cancelled').length;
+
+            document.getElementById('stat-total').textContent = allBookings.length;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-confirmed').textContent = confirmed;
+            document.getElementById('stat-cancelled').textContent = cancelled;
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('bookings-tbody');
+            const emptyState = document.getElementById('empty-state');
+
+            const filtered = currentFilter === 'all'
+                ? allBookings
+                : allBookings.filter(b => b.status === currentFilter);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = filtered.map(b => `
+                <tr data-id="${b.id}">
+                    <td>${b.id}</td>
+                    <td>${esc(b.name)}</td>
+                    <td><a href="mailto:${esc(b.email)}" style="color:var(--wood-highlight)">${esc(b.email)}</a></td>
+                    <td><a href="tel:${esc(b.phone)}" style="color:var(--wood-highlight)">${esc(b.phone)}</a></td>
+                    <td>${b.session_type === 'solo' ? '1-on-1' : `Group (${b.group_size})`}</td>
+                    <td>${b.preferred_date}</td>
+                    <td>${formatTime(b.preferred_time)}</td>
+                    <td><span class="badge badge-${b.status}">${b.status}</span></td>
+                    <td>${esc(b.notes || '—')}</td>
+                    <td>
+                        ${b.status === 'pending' ? `
+                            <button class="action-btn confirm" onclick="updateStatus(${b.id}, 'confirmed')">Confirm</button>
+                            <button class="action-btn cancel" onclick="updateStatus(${b.id}, 'cancelled')">Cancel</button>
+                        ` : b.status === 'confirmed' ? `
+                            <button class="action-btn cancel" onclick="updateStatus(${b.id}, 'cancelled')">Cancel</button>
+                        ` : '—'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function formatTime(t) {
+            const map = {'08:00':'8 AM','09:00':'9 AM','10:00':'10 AM','11:00':'11 AM','12:00':'12 PM','13:00':'1 PM'};
+            return map[t] || t;
+        }
+
+        function esc(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Status update
+        async function updateStatus(id, status) {
+            try {
+                const resp = await fetch(`/bookings/${id}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Key': adminKey
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (!resp.ok) {
+                    const err = await resp.json();
+                    alert(err.detail || 'Failed');
+                    return;
+                }
+
+                // Update local state
+                const booking = allBookings.find(b => b.id === id);
+                if (booking) booking.status = status;
+                renderDashboard();
+            } catch {
+                alert('Connection error.');
+            }
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTable();
+            });
+        });
+    </script>
+</body>
+</html>

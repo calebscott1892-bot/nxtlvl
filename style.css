@@ -1,0 +1,1255 @@
+/* ======================================================================
+   NXTLVL — Coach Raquan Bryant
+   Premium Dark + Wood Grain Athletic Aesthetic
+   ====================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600&display=swap');
+
+/* ── Skip Link ─────────────────────────────────────── */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    background: var(--wood-accent);
+    color: var(--white);
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+.skip-link:focus {
+    top: 0.5rem;
+}
+
+/* ── Custom Properties ─────────────────────────────── */
+:root {
+    --black: #0a0a0a;
+    --charcoal: #141414;
+    --grey-dark: #1e1e1e;
+    --grey-mid: #3a3a3a;
+    --grey-light: #8a8a8a;
+    --white: #f5f5f5;
+    --accent: #c8c8c8;
+
+    /* Wood tones — subtle warm undertones */
+    --wood-dark: #1a1510;
+    --wood-mid: #2a2218;
+    --wood-light: #3d3225;
+    --wood-accent: #5c4a35;
+    --wood-highlight: #8b7355;
+
+    --font-heading: 'Barlow Condensed', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* ── Reset & Base ──────────────────────────────────── */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    background-color: var(--black);
+    color: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* ── Wood Grain Overlay ────────────────────────────── */
+.wood-grain-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.06;
+    background:
+        repeating-linear-gradient(
+            92deg,
+            transparent 0px,
+            transparent 3px,
+            rgba(139, 115, 85, 0.3) 3px,
+            rgba(139, 115, 85, 0.3) 4px,
+            transparent 4px,
+            transparent 20px
+        ),
+        repeating-linear-gradient(
+            88deg,
+            transparent 0px,
+            transparent 8px,
+            rgba(92, 74, 53, 0.15) 8px,
+            rgba(92, 74, 53, 0.15) 9px,
+            transparent 9px,
+            transparent 35px
+        ),
+        repeating-linear-gradient(
+            95deg,
+            transparent 0px,
+            transparent 15px,
+            rgba(139, 115, 85, 0.08) 15px,
+            rgba(139, 115, 85, 0.08) 17px,
+            transparent 17px,
+            transparent 60px
+        );
+}
+
+#hero, #about, #services, #policies {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Scroll Reveal Animations ──────────────────────── */
+/* Progressive enhancement: visible by default.
+   JS adds .reveal-ready, then IntersectionObserver adds .revealed. */
+.reveal-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-ready [data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-ready [data-reveal].revealed .service-card,
+.reveal-ready [data-reveal].revealed .policy-card {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reveal-ready [data-reveal].revealed .service-card:nth-child(1) { animation-delay: 0s; }
+.reveal-ready [data-reveal].revealed .service-card:nth-child(2) { animation-delay: 0.12s; }
+.reveal-ready [data-reveal].revealed .service-card:nth-child(3) { animation-delay: 0.24s; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Navigation ────────────────────────────────────── */
+#main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(139, 115, 85, 0.15);
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+}
+
+.nav-content nav {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.nav-content nav a {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--grey-light);
+    transition: color 0.2s ease;
+}
+
+.nav-content nav a:hover {
+    color: var(--white);
+}
+
+.nav-social {
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.nav-social:hover {
+    opacity: 1;
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+/* ── CTA Buttons ───────────────────────────────────── */
+.cta-button {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2.2rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid var(--wood-highlight);
+}
+
+.primary-cta {
+    background-color: var(--wood-accent);
+    color: var(--white);
+    border-color: var(--wood-accent);
+}
+
+.primary-cta:hover {
+    background-color: var(--wood-highlight);
+    border-color: var(--wood-highlight);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(92, 74, 53, 0.3);
+}
+
+.secondary-cta {
+    border: 1px solid var(--wood-accent);
+    color: var(--white);
+    background: transparent;
+}
+
+.secondary-cta:hover {
+    border-color: var(--wood-highlight);
+    background-color: var(--wood-accent);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+/* ── Hero ──────────────────────────────────────────── */
+#hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--black);
+    position: relative;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('/public/Header.jpeg') center 22% / cover no-repeat;
+    opacity: 0.25;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(5rem, 14vw, 12rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 0.85;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, var(--white) 40%, var(--wood-highlight) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-family: var(--font-heading);
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--wood-highlight);
+    margin-bottom: 1rem;
+}
+
+.hero-sub {
+    font-size: 1rem;
+    color: var(--grey-light);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+}
+
+/* ── Hero Entrance Animation ───────────────────────── */
+.hero-entrance {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+/* The horizontal line container */
+.hero-line {
+    position: absolute;
+    left: -2rem;
+    right: -2rem;
+    bottom: 0.15em;
+    height: 2px;
+    display: flex;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hero-line__left,
+.hero-line__right {
+    flex: 1;
+    height: 100%;
+    background: var(--white);
+    transform: scaleX(0);
+}
+
+.hero-line__left  { transform-origin: right center; }
+.hero-line__right { transform-origin: left center; }
+
+/* Title rises from below the line */
+.hero-title-mask {
+    overflow: hidden;
+    padding-bottom: 0.1em;   /* room for descenders */
+}
+
+.hero-title-mask h1 {
+    transform: translateY(110%);
+    opacity: 0;
+}
+
+/* Stagger elements below the title */
+.hero-stagger {
+    opacity: 0;
+    transform: translateY(18px);
+}
+
+/* ── Triggered state (.hero-animate) ─── */
+.hero-animate .hero-line__left,
+.hero-animate .hero-line__right {
+    animation: lineDrawIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-animate .hero-line__right {
+    animation-delay: 0.05s;
+}
+
+.hero-animate .hero-title-mask h1 {
+    animation: titleRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+.hero-animate .hero-stagger[data-stagger="1"] {
+    animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
+}
+.hero-animate .hero-stagger[data-stagger="2"] {
+    animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.6s forwards;
+}
+.hero-animate .hero-stagger[data-stagger="3"] {
+    animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.9s forwards;
+}
+
+@keyframes lineDrawIn {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+@keyframes titleRise {
+    from { transform: translateY(110%); opacity: 0; }
+    15%  { opacity: 1; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes staggerIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion: skip animations, show everything immediately */
+@media (prefers-reduced-motion: reduce) {
+    .hero-title-mask h1,
+    .hero-stagger,
+    .hero-line__left,
+    .hero-line__right {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .hero-line__left,
+    .hero-line__right {
+        transform: scaleX(1) !important;
+    }
+}
+
+/* ── Sections (shared) ─────────────────────────────── */
+section {
+    padding: 7rem 0;
+}
+
+#about {
+    background: linear-gradient(180deg, var(--black) 0%, var(--wood-dark) 50%, var(--black) 100%);
+}
+
+#services {
+    background: linear-gradient(180deg, var(--charcoal) 0%, var(--wood-dark) 50%, var(--charcoal) 100%);
+}
+
+#booking {
+    background-color: var(--black);
+}
+
+#policies {
+    background: linear-gradient(180deg, var(--charcoal) 0%, var(--wood-dark) 40%, var(--charcoal) 100%);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+}
+
+.section-subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--grey-light);
+    margin-bottom: 3.5rem;
+}
+
+/* ── About ─────────────────────────────────────────── */
+.about-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* Profile photo with hover crossfade */
+.profile-img-wrapper {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border: 1px solid var(--wood-accent);
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.profile-img-wrapper:hover {
+    border-color: var(--wood-highlight);
+}
+
+.profile-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.6s ease;
+}
+
+.profile-img--front {
+    opacity: 1;
+    z-index: 1;
+}
+
+.profile-img--back {
+    opacity: 0;
+    z-index: 0;
+}
+
+.profile-img-wrapper:hover .profile-img--front {
+    opacity: 0;
+}
+
+.profile-img-wrapper:hover .profile-img--back {
+    opacity: 1;
+}
+
+.placeholder-img {
+    background:
+        linear-gradient(135deg, var(--wood-mid) 0%, var(--grey-dark) 100%);
+    border: 1px solid var(--wood-accent);
+    aspect-ratio: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--grey-light);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: border-color 0.3s ease;
+}
+
+.placeholder-img:hover {
+    border-color: var(--wood-highlight);
+}
+
+.about-bio h2 {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.lead-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+}
+
+.differentiator {
+    font-size: 0.95rem;
+    color: var(--grey-light);
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+}
+
+/* ── Career Carousel ───────────────────────────────── */
+.career-heading {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--grey-light);
+    margin-top: 4rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.career-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--wood-highlight);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.career-carousel {
+    overflow: hidden;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+    padding: 1rem 0 2rem;
+    margin: 0 -2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.career-carousel:active {
+    cursor: grabbing;
+}
+
+.career-track {
+    display: flex;
+    gap: 1.5rem;
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+}
+
+.career-card {
+    flex: 0 0 260px;
+    background:
+        linear-gradient(145deg, var(--wood-mid) 0%, var(--charcoal) 100%);
+    border: 1px solid var(--wood-accent);
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+}
+
+.career-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 115, 85, 0.1);
+    border-color: var(--wood-highlight);
+}
+
+.career-photo {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, var(--wood-dark) 0%, var(--grey-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--grey-mid);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-bottom: 2px solid var(--wood-accent);
+}
+
+.career-photo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease;
+}
+
+/* Dual-image hover crossfade for career cards */
+.career-photo--dual .career-photo-img--front {
+    opacity: 1;
+    z-index: 1;
+}
+
+.career-photo--dual .career-photo-img--back {
+    opacity: 0;
+    z-index: 0;
+}
+
+.career-card:hover .career-photo--dual .career-photo-img--front {
+    opacity: 0;
+}
+
+.career-card:hover .career-photo--dual .career-photo-img--back {
+    opacity: 1;
+}
+
+.career-card .career-year {
+    display: block;
+    padding: 1rem 1.25rem 0;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--wood-highlight);
+}
+
+.career-card h4 {
+    padding: 0.3rem 1.25rem 0;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--white);
+}
+
+.career-card p {
+    padding: 0.4rem 1.25rem 1.25rem;
+    font-size: 0.82rem;
+    color: var(--grey-light);
+    line-height: 1.5;
+}
+
+/* ── Services ──────────────────────────────────────── */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.service-card {
+    background:
+        linear-gradient(160deg, var(--wood-mid) 0%, var(--charcoal) 60%, var(--grey-dark) 100%);
+    border: 1px solid var(--wood-accent);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 115, 85, 0.08);
+    border-color: var(--wood-highlight);
+}
+
+.service-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.service-card .description {
+    font-size: 0.9rem;
+    color: var(--grey-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.price-box {
+    margin-bottom: 1.5rem;
+}
+
+.price {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--white);
+}
+
+.unit {
+    font-size: 1rem;
+    color: var(--grey-light);
+    margin-left: 0.25rem;
+}
+
+.discount-amount {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 900;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--wood-highlight);
+}
+
+.detail {
+    font-size: 0.85rem;
+    color: var(--grey-light);
+}
+
+.disclaimer {
+    font-size: 0.8rem;
+    color: var(--grey-light);
+    margin-bottom: 1.5rem;
+}
+
+.service-card .cta-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+/* ── Booking ───────────────────────────────────────── */
+.booking-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+#booking-calendar {
+    background:
+        linear-gradient(160deg, var(--wood-mid) 0%, var(--charcoal) 100%);
+    border: 1px solid var(--wood-accent);
+    padding: 1.5rem;
+    min-height: 500px;
+}
+
+/* FullCalendar dark + wood theme overrides */
+#booking-calendar .fc {
+    --fc-border-color: var(--grey-mid);
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: var(--grey-dark);
+    --fc-today-bg-color: rgba(139, 115, 85, 0.12);
+    --fc-event-bg-color: var(--wood-accent);
+    --fc-event-border-color: var(--wood-accent);
+    --fc-event-text-color: var(--white);
+}
+
+#booking-calendar .fc .fc-toolbar-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--white);
+}
+
+#booking-calendar .fc .fc-button {
+    background-color: var(--wood-dark);
+    border-color: var(--wood-accent);
+    color: var(--white);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+#booking-calendar .fc .fc-button:hover {
+    background-color: var(--wood-accent);
+}
+
+#booking-calendar .fc .fc-daygrid-day-number,
+#booking-calendar .fc .fc-col-header-cell-cushion {
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--grey-light);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: var(--wood-dark);
+    border: 1px solid var(--wood-accent);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b7355' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--wood-highlight);
+    box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.25);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--grey-mid);
+}
+
+.submit-button {
+    width: 100%;
+    border: none;
+    margin-top: 0.5rem;
+    position: relative;
+}
+
+.submit-button .btn-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+}
+
+.submit-button.loading .btn-text {
+    visibility: hidden;
+}
+
+.submit-button.loading .btn-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -9px 0 0 -9px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#form-status {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.75rem;
+    min-height: 1.4em;
+}
+
+.form-note {
+    font-size: 0.8rem;
+    color: var(--grey-light);
+    text-align: center;
+    margin-top: 0.75rem;
+}
+
+/* ── Calendar Selected Day ─────────────────────────── */
+.fc-day-selected {
+    background: rgba(139, 115, 85, 0.25) !important;
+    outline: 2px solid var(--wood-highlight);
+    outline-offset: -2px;
+}
+
+/* ── Booking Confirmation Panel ────────────────────── */
+.booking-confirmation {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(160deg, var(--wood-mid) 0%, var(--charcoal) 100%);
+    border: 1px solid var(--wood-accent);
+}
+
+.booking-confirmation .conf-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    border: 2px solid #22c55e;
+    color: #22c55e;
+    font-size: 1.5rem;
+    line-height: 52px;
+}
+
+.booking-confirmation h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.booking-confirmation .conf-summary {
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.booking-confirmation .conf-details {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--wood-highlight);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+}
+
+.conf-next-steps {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--wood-accent);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.conf-next-steps h4 {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.conf-next-steps > p {
+    font-size: 0.9rem;
+    color: var(--accent);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+}
+
+.conf-next-steps .conf-note {
+    font-size: 0.8rem;
+    color: var(--grey-light);
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+/* ── Policies ──────────────────────────────────────── */
+.policies-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.policy-card {
+    background:
+        linear-gradient(160deg, var(--wood-mid) 0%, var(--grey-dark) 100%);
+    border: 1px solid var(--wood-accent);
+    padding: 2rem;
+    border-top: 3px solid var(--wood-highlight);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.policy-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--wood-highlight);
+}
+
+.policy-card:last-child {
+    grid-column: 1 / -1;
+}
+
+.policy-card h4 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wood-highlight);
+    margin-bottom: 0.75rem;
+}
+
+.policy-card p {
+    font-size: 0.9rem;
+    color: var(--grey-light);
+    line-height: 1.65;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.payment-method {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.payment-label {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--wood-highlight);
+}
+
+.payment-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--grey-light);
+}
+
+.payment-link {
+    color: var(--wood-highlight);
+    text-decoration: none;
+}
+
+.payment-link:hover {
+    text-decoration: underline;
+}
+
+.venmo-qr {
+    width: 100px;
+    height: 100px;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+    border: 2px solid var(--wood-accent);
+}
+
+/* ── Footer ────────────────────────────────────────── */
+#footer {
+    background-color: var(--black);
+    border-top: 1px solid var(--wood-accent);
+    padding: 3.5rem 0 2rem;
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-brand {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.footer-social {
+    margin-bottom: 1.5rem;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--wood-accent);
+    color: var(--grey-light);
+    transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+    background-color: var(--wood-accent);
+    color: var(--white);
+    border-color: var(--wood-highlight);
+}
+
+.footer-info {
+    color: var(--grey-light);
+    font-size: 0.9rem;
+    line-height: 2;
+}
+
+.footer-info a {
+    color: var(--wood-highlight);
+}
+
+.footer-info a:hover {
+    color: var(--white);
+}
+
+.copyright {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: var(--grey-mid);
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .booking-container {
+        grid-template-columns: 1fr;
+    }
+
+    .policies-list {
+        grid-template-columns: 1fr;
+    }
+
+    .policy-card:last-child {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-content nav {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-content nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        background-color: rgba(10, 10, 10, 0.98);
+        border-bottom: 1px solid var(--wood-accent);
+        padding: 1.5rem 2rem;
+        gap: 1.25rem;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+        letter-spacing: 0.15em;
+    }
+
+    section {
+        padding: 4rem 0;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .about-bio h2 {
+        text-align: center;
+    }
+
+    .placeholder-img,
+    .profile-img-wrapper {
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    .container {
+        padding: 0 1.25rem;
+    }
+
+    .career-card {
+        flex: 0 0 220px;
+    }
+
+    .career-photo {
+        height: 140px;
+    }
+}
