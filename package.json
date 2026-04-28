@@ -3,5 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "cd .. && .\\nxtlvl\\.venv\\Scripts\\python.exe -m uvicorn nxtlvl.server:app --reload"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.0"
   }
 }
